@@ -1,0 +1,49 @@
+name: Update standings
+
+on:
+  schedule:
+    # Every 2 hours (times are UTC). GitHub may start scheduled runs a few minutes late.
+    - cron: "20 */2 * * *"
+  workflow_dispatch: {}   # adds a "Run workflow" button on the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-standings
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch scores, NET and ratings
+        run: python scripts/fetch_data.py
+
+      - name: Run the engine
+        run: |
+          ARGS="--data data.json --games games.json --schedule schedule-2026-27.json --ratings ratings.json --sims 5000"
+          [ -f net.json ] && ARGS="$ARGS --net net.json"
+          [ -f overall.json ] && ARGS="$ARGS --overall overall.json"
+          python engine.py $ARGS
+
+      - name: Save changes
+        run: |
+          git config user.name "picks-pool-bot"
+          git config user.email "picks-pool-bot@users.noreply.github.com"
+          git add data.json ratings.json
+          # Only commit when standings or projections actually changed (ignore the timestamp)
+          if git diff --cached --quiet -- ratings.json && \
+             [ -z "$(git diff --cached -U0 -- data.json | grep '^[+-] ' | grep -v updatedAt | grep -v asOf)" ]; then
+            echo "No changes."
+            git reset -q
+          else
+            git commit -m "Update standings $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
