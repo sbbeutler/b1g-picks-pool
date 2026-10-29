@@ -24,7 +24,7 @@ jobs:
           python-version: "3.12"
 
       - name: Fetch scores, NET and ratings
-        run: python scripts/fetch_data.py
+        run: python fetch_data.py
 
       - name: Run the engine
         run: |
