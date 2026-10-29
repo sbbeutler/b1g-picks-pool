@@ -1,0 +1,313 @@
+<title>Big Ten Picks Pool</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a scoreboard header over one narrow column of tabbed panels; numbers set like a box score. */
+:root{
+  --bg:#F3F4F6; --surface:#FFFFFF; --ink:#151A22; --muted:#5D6573; --line:#DDE1E7;
+  --accent:#1E3A66; --accent-ink:#FFFFFF; --ball:#C9781C;
+  --good:#2E7D4F; --bad:#B23A32; --soft:#E9EDF3;
+  --display:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1319; --surface:#171C24; --ink:#E8EBF0; --muted:#98A1AF; --line:#2A313C;
+  --accent:#8FB1E8; --accent-ink:#0F1319; --ball:#E59A45; --good:#5CC48A; --bad:#EE7B72; --soft:#1F2630; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1319; --surface:#171C24; --ink:#E8EBF0; --muted:#98A1AF; --line:#2A313C;
+  --accent:#8FB1E8; --accent-ink:#0F1319; --ball:#E59A45; --good:#5CC48A; --bad:#EE7B72; --soft:#1F2630; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,7vw,52px);line-height:.95;margin:0;letter-spacing:.01em;text-transform:uppercase}
+h1 span{color:var(--ball)}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.crew{width:88px;height:88px;flex:none;object-fit:cover;border-radius:12px;box-shadow:0 0 0 3px var(--surface),0 0 0 4px var(--ball)}
+@media (max-width:420px){.crew{width:64px;height:64px;border-radius:10px}}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 0}
+select{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+nav{display:flex;gap:4px;border-bottom:2px solid var(--line);overflow-x:auto}
+nav button{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.04em;text-transform:uppercase;
+  background:none;border:0;color:var(--muted);padding:8px 12px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ball)}
+nav button:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h2{font-family:var(--display);font-weight:700;font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin:0}
+h3{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.04em;margin:0;color:var(--muted)}
+.panel{display:flex;flex-direction:column;gap:16px}
+.note{color:var(--muted);font-size:13px;margin:0;max-width:65ch}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{font-family:var(--display);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:13px;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--mono);font-size:14px}
+.rk{font-family:var(--display);font-weight:800;font-size:20px;width:44px}
+.team{display:inline-flex;align-items:center;gap:8px}
+.dot{width:10px;height:10px;border-radius:2px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+.lead td{background:color-mix(in srgb,var(--ball) 10%,transparent)}
+.row-btn{cursor:pointer}
+.row-btn:hover td{background:var(--soft)}
+.chip{display:inline-block;font-family:var(--mono);font-size:12px;padding:1px 6px;border-radius:4px;background:var(--soft);color:var(--muted)}
+.hit{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good);font-weight:500}
+.miss-big{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad);font-weight:500}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:20px;color:var(--muted)}
+.empty strong{color:var(--ink)}
+.awards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.award{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.award .lbl{font-family:var(--display);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.award .who{font-family:var(--display);font-weight:800;font-size:28px;line-height:1.05}
+.award .what{font-size:13px;color:var(--muted)}
+.award.champ{border-color:var(--ball)}
+.award.champ .who{color:var(--ball)}
+.season-block{display:flex;flex-direction:column;gap:12px;padding-top:4px}
+.bar{height:6px;border-radius:3px;background:var(--soft);position:relative;min-width:80px}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:3px;background:var(--accent)}
+.detail td{background:var(--soft);white-space:normal}
+.mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px 16px;font-size:13px;padding:4px 0}
+.mini span{display:flex;justify-content:space-between;gap:8px}
+.meter{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.meter-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;align-items:baseline}
+.meter-top strong{font-family:var(--display);font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.03em}
+.meter-top span{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.meter-track{height:12px;border-radius:6px;background:var(--soft);overflow:hidden;
+  background-image:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) calc(10% - 1px) 10%)}
+.meter-track i{display:block;height:100%;background:var(--ball);border-radius:6px 0 0 6px;min-width:0}
+.av{display:inline-grid;place-items:center;border-radius:50%;flex:none;object-fit:cover;font-family:var(--display);font-weight:700;letter-spacing:.02em;line-height:1;
+  color:#fff;background:hsl(var(--h) 45% 42%);box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--line)}
+.av-ex{background:var(--soft);color:var(--muted);box-shadow:0 0 0 1px var(--line);border:1px dashed var(--muted)}
+.who-cell{display:inline-flex;align-items:center;gap:8px}
+.th-av-in{display:inline-flex;flex-direction:column;align-items:flex-end;gap:4px}
+.foot{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion:no-preference){.panel{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img class="crew" src="avatars/crew.jpg" alt="The three of us in the stands at a Purdue game" width="88" height="88">
+      <div>
+        <h1>Big Ten <span>Picks</span> Pool</h1>
+        <p class="sub" id="status">Loading standings…</p>
+      </div>
+    </div>
+    <label class="sub" for="season">Season
+      <select id="season"></select>
+    </label>
+  </header>
+  <nav role="tablist" id="tabs">
+    <button role="tab" data-tab="board" aria-selected="true">Leaderboard</button>
+    <button role="tab" data-tab="standings" aria-selected="false">Standings</button>
+    <button role="tab" data-tab="proj" aria-selected="false">Projections</button>
+    <button role="tab" data-tab="experts" aria-selected="false">Picks from the Experts</button>
+    <button role="tab" data-tab="history" aria-selected="false">History &amp; Awards</button>
+  </nav>
+  <main id="view" class="panel"><div class="empty">Loading…</div></main>
+  <p class="foot">Scoring: for each team, the gap between predicted and actual finish is added to your score. Lowest total wins. Mid-season ties in the standings use conference win %, then head-to-head (if played), then NET. Final standings use the official Big Ten tiebreakers. Conference games only; the Big Ten Tournament doesn't count. Projections use Bart Torvik's T-Rank.</p>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+let DATA = null, tab = 'board', seasonId = null, openPlayer = null;
+try { const t = localStorage.getItem('b1g-tab'); if (t) tab = t; } catch (e) {}
+
+function avatar(n,size){
+  const src=(DATA.avatars||{})[n];
+  const ex=Object.values(DATA.seasons).some(x=>x.experts&&n in x.experts);
+  let h=0; for(const c of n) h=(h*31+c.charCodeAt(0))>>>0;
+  const hues=[212,18,152,268,38,340,190,96];
+  const ini=n.split(/\s+/).filter(w=>/^[A-Za-z]/.test(w)).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const st=`width:${size}px;height:${size}px;font-size:${Math.round(size*.42)}px;--h:${hues[h%hues.length]}`;
+  return src?`<img class="av" src="${esc(src)}" alt="" style="${st}">`:`<span class="av ${ex?'av-ex':''}" aria-hidden="true" style="${st}">${esc(ini)}</span>`;
+}
+function who(n){return `<span class="who-cell">${avatar(n,26)}<strong>${esc(n)}</strong></span>`}
+function avHead(n){return `<span class="th-av-in">${avatar(n,22)}<span>${esc(n)}</span></span>`}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function teamCell(t){const c=(DATA.teams||{})[t]||'#888';return `<span class="team"><span class="dot" style="background:${c}"></span>${esc(t)}</span>`}
+function ord(n){const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])}
+
+// Pure scoring: picks = [team,...] (index 0 = 1st), order = [team,...] actual/projected
+function score(picks, order){
+  const pos = {}; order.forEach((t,i)=>pos[t]=i+1);
+  const rows = picks.map((t,i)=>({team:t, pick:i+1, actual:pos[t], diff:Math.abs(i+1-pos[t])}));
+  return {total:rows.reduce((a,r)=>a+r.diff,0), exact:rows.filter(r=>r.diff===0).length, rows};
+}
+function leaderboard(season, order){
+  const names = Object.keys(season.picks||{});
+  const list = names.map(n=>({name:n, ...score(season.picks[n], order)}));
+  list.sort((a,b)=>a.total-b.total || b.exact-a.exact || a.name.localeCompare(b.name));
+  let rank=0, prev=null;
+  list.forEach((p,i)=>{ if(prev===null||p.total!==prev) rank=i+1; p.rank=rank; prev=p.total; });
+  return list;
+}
+function awards(season){
+  const lb = leaderboard(season, season.final);
+  const minT = lb[0].total, maxT = Math.max(...lb.map(p=>p.total));
+  const champ = season.champion || lb.filter(p=>p.total===minT).map(p=>p.name).join(' & ');
+  const last = lb.filter(p=>p.total===maxT).map(p=>p.name);
+  let worst = [];
+  lb.forEach(p=>p.rows.forEach(r=>worst.push({name:p.name,...r})));
+  const wmax = Math.max(...worst.map(w=>w.diff)); worst = worst.filter(w=>w.diff===wmax);
+  const emax = Math.max(...lb.map(p=>p.exact));
+  const exact = lb.filter(p=>p.exact===emax);
+  return {lb, champ, last, lastScore:maxT, worst, wmax, exact, emax};
+}
+function orderFor(s){
+  if (s.status==='final') return s.final;
+  return (s.standings||[]).map(r=>r.team);
+}
+
+function seasonMeter(s){
+  const total = s.gamesTotal || 180;
+  const played = s.status==='final' ? total : (s.gamesPlayed || 0);
+  const p = Math.round(played / total * 100);
+  return `<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${played}" aria-label="Conference games played">
+    <div class="meter-top"><strong>${p}% of the season complete</strong><span>${played}/${total} games complete</span></div>
+    <div class="meter-track"><i style="width:${played/total*100}%"></i></div></div>`;
+}
+function renderBoard(s){
+  return seasonMeter(s) + renderBoardBody(s);
+}
+function renderBoardBody(s){
+  const order = orderFor(s);
+  const names = Object.keys(s.picks||{});
+  if (!names.length) return `<div class="empty"><strong>Picks aren't in yet.</strong> Brad enters everyone's 1–18 list before tip-off. Until then, see the preseason outlook under Projections.</div>`;
+  if (!order.length) return `<div class="empty"><strong>Picks are locked.</strong> Scores start once the first Big Ten conference game is final.</div>`;
+  const lb = leaderboard(s, order);
+  const projOrder = (s.projections?.teams||[]).map(t=>t.team);
+  const proj = projOrder.length===18 ? Object.fromEntries(leaderboard(s, projOrder).map(p=>[p.name,p.total])) : {};
+  const maxT = Math.max(...lb.map(p=>p.total),1);
+  let h = `<div class="tbl"><table><thead><tr><th>#</th><th>Player</th><th class="n">Score</th><th></th><th class="n">Exact</th>${projOrder.length?'<th class="n">Proj. final</th>':''}</tr></thead><tbody>`;
+  lb.forEach(p=>{
+    h += `<tr class="row-btn ${p.rank===1?'lead':''}" data-player="${esc(p.name)}" tabindex="0" aria-expanded="${openPlayer===p.name}">
+      <td class="rk">${p.rank}</td><td>${who(p.name)}</td><td class="n">${p.total}</td>
+      <td style="width:30%"><div class="bar"><i style="width:${(p.total/maxT*100).toFixed(1)}%"></i></div></td>
+      <td class="n">${p.exact}</td>${projOrder.length?`<td class="n">${proj[p.name]??'–'}</td>`:''}</tr>`;
+    if (openPlayer===p.name){
+      h += `<tr class="detail"><td colspan="6"><div class="mini">${p.rows.map(r=>`<span>${r.pick}. ${esc(r.team)} <span class="chip ${r.diff===0?'hit':r.diff>=6?'miss-big':''}">${r.diff===0?'exact':'now '+ord(r.actual)+' · +'+r.diff}</span></span>`).join('')}</div></td></tr>`;
+    }
+  });
+  h += `</tbody></table></div><p class="note">Tap a player to see each pick. ${s.status!=='final'?'Scores are against the current provisional standings. "Proj. final" scores the same picks against the projected final order.':''}</p>`;
+  return h;
+}
+
+function renderStandings(s){
+  if (s.status==='final'){
+    return `<div class="tbl"><table><thead><tr><th>#</th><th>Team</th></tr></thead><tbody>${s.final.map((t,i)=>`<tr><td class="rk">${i+1}</td><td>${teamCell(t)}</td></tr>`).join('')}</tbody></table></div><p class="note">Official final regular-season standings.</p>`;
+  }
+  if (!(s.standings||[]).length) return `<div class="empty"><strong>No conference games played yet.</strong> Standings appear here after the first Big Ten game is final, and update after every game.</div>`;
+  return `<div class="tbl"><table><thead><tr><th>#</th><th>Team</th><th class="n">W–L</th><th class="n">Pct</th><th>Tiebreak</th></tr></thead><tbody>${
+    s.standings.map((r,i)=>`<tr><td class="rk">${i+1}</td><td>${teamCell(r.team)}</td><td class="n">${r.w}–${r.l}</td><td class="n">${(r.w+r.l?r.w/(r.w+r.l):0).toFixed(3).replace(/^0/,'')}</td><td><span class="note">${esc(r.note||'')}</span></td></tr>`).join('')
+  }</tbody></table></div><p class="note">${s.gamesPlayed} of ${s.gamesTotal} conference games played. ${s.standingsType==='official'?'Official Big Ten tiebreakers applied.':'Provisional order: win %, then head-to-head, then NET.'}</p>`;
+}
+
+function renderProj(s){
+  const p = s.projections;
+  if (!p) return `<div class="empty">No projections for this season.</div>`;
+  const hasSim = p.teams.some(t=>t.avgFinish!=null);
+  let h = `<p class="note">${esc(p.source)}, as of ${esc(p.asOf)}. ${hasSim?'Each remaining game is simulated thousands of times using T-Rank ratings.':'Preseason projected conference records. Once the conference schedule is posted, this switches to a full simulation of every remaining game.'}</p>`;
+  h += `<div class="tbl"><table><thead><tr><th>Proj.</th><th>Team</th><th class="n">Conf W–L</th>${hasSim?'<th class="n">Avg finish</th><th class="n">Top 4</th>':''}<th class="n">T-Rank</th></tr></thead><tbody>`;
+  p.teams.forEach((t,i)=>{
+    h += `<tr><td class="rk">${i+1}</td><td>${teamCell(t.team)}</td><td class="n">${t.w}–${t.l}</td>${hasSim?`<td class="n">${t.avgFinish.toFixed(1)}</td><td class="n">${Math.round(t.top4*100)}%</td>`:''}<td class="n">${t.trank}</td></tr>`;
+  });
+  return h + `</tbody></table></div>`;
+}
+
+function renderExperts(s){
+  const ex = s.experts||{}, exN = Object.keys(ex), fr = s.picks||{}, frN = Object.keys(fr);
+  if (!exN.length) return `<div class="empty"><strong>No expert picks for ${esc(s.id)}.</strong></div>`;
+  let basis = orderFor(s), basisLbl = s.status==='final'?'final standings':'current standings';
+  if (!basis.length && s.projections) { basis = s.projections.teams.map(t=>t.team); basisLbl = 'projected final standings (T-Rank)'; }
+  const all = {...ex, ...fr};
+  const isEx = n => n in ex;
+  const lb = leaderboard({picks:all}, basis);
+  const maxT = Math.max(...lb.map(p=>p.total),1);
+  let h = `<p class="note">How our picks stack up against ${exN.length} outside experts, scored the same way against the ${basisLbl}.${frN.length?'':' Our picks show up here once they’re entered.'}</p>`;
+  h += `<div class="tbl"><table><thead><tr><th>#</th><th>Picker</th><th></th><th class="n">Score</th><th></th><th class="n">Exact</th></tr></thead><tbody>${
+    lb.map(p=>`<tr class="${p.rank===1?'lead':''}"><td class="rk">${p.rank}</td><td>${who(p.name)}</td><td><span class="chip">${isEx(p.name)?'Expert':'Us'}</span></td><td class="n">${p.total}</td><td style="width:26%"><div class="bar"><i style="width:${(p.total/maxT*100).toFixed(1)}%;${isEx(p.name)?'background:var(--muted)':''}"></i></div></td><td class="n">${p.exact}</td></tr>`).join('')
+  }</tbody></table></div>`;
+  const cols = [...exN, ...frN];
+  const pos = {}; basis.forEach((t,i)=>pos[t]=i+1);
+  const avg = t => exN.reduce((a,n)=>a+ex[n].indexOf(t)+1,0)/exN.length;
+  h += `<h3>Every pick, team by team</h3><div class="tbl"><table><thead><tr><th>${s.standings?.length||s.status==='final'?'Now':'Proj.'}</th><th>Team</th>${exN.map(n=>`<th class="n th-av">${avHead(n)}</th>`).join('')}<th class="n">Expert avg</th>${frN.map(n=>`<th class="n th-av">${avHead(n)}</th>`).join('')}</tr></thead><tbody>${
+    basis.map((t,i)=>{
+      const cell = n => {const pk=all[n].indexOf(t)+1,d=Math.abs(pk-(i+1));return `<td class="n"><span class="chip ${d===0?'hit':d>=6?'miss-big':''}">${pk}</span></td>`};
+      return `<tr><td class="rk">${i+1}</td><td>${teamCell(t)}</td>${exN.map(cell).join('')}<td class="n">${avg(t).toFixed(1)}</td>${frN.map(cell).join('')}</tr>`;
+    }).join('')
+  }</tbody></table></div><p class="note">Numbers are where each picker slotted the team. Green matches the ${basisLbl}; red is 6 or more spots off.${Object.entries(s.expertNotes||{}).map(([n,v])=>` ${esc(n)}: ${esc(v)}.`).join('')}</p>`;
+  if (frN.length){
+    const dist = (a,b)=>a.reduce((x,t,i)=>x+Math.abs(i-b.indexOf(t)),0);
+    h += `<h3>Which expert thinks most like you?</h3><div class="tbl"><table><thead><tr><th>Player</th>${exN.map(n=>`<th class="n th-av">${avHead(n)}</th>`).join('')}<th>Closest</th></tr></thead><tbody>${
+      frN.map(f=>{const ds=exN.map(n=>dist(fr[f],ex[n]));const m=Math.min(...ds);return `<tr><td>${who(f)}</td>${ds.map(d=>`<td class="n">${d}</td>`).join('')}<td>${esc(exN.filter((n,i)=>ds[i]===m).join(' & '))}</td></tr>`}).join('')
+    }</tbody></table></div><p class="note">Total spots of disagreement between each pair of lists. Lower means more alike.</p>`;
+  }
+  return h;
+}
+
+function renderHistory(){
+  const done = DATA.seasons.filter(s=>s.status==='final');
+  if (!done.length) return `<div class="empty">No completed seasons yet.</div>`;
+  // All-time
+  const all = {};
+  const bump = (n,k,v=1)=>{all[n]=all[n]||{titles:0,lasts:0,exact:0,seasons:0,total:0};all[n][k]+=v};
+  const per = done.map(s=>({s, a:awards(s)}));
+  per.forEach(({s,a})=>{
+    a.lb.forEach(p=>{bump(p.name,'seasons');bump(p.name,'exact',p.exact);bump(p.name,'total',p.total)});
+    String(a.champ).split(' & ').forEach(n=>bump(n,'titles'));
+    a.last.forEach(n=>bump(n,'lasts'));
+  });
+  const names = Object.keys(all).sort((x,y)=>all[y].titles-all[x].titles||all[y].exact-all[x].exact||x.localeCompare(y));
+  let h = `<h2>All-time</h2><div class="tbl"><table><thead><tr><th>Player</th><th class="n">Titles</th><th class="n">Last place</th><th class="n">Exact hits</th><th class="n">Avg score</th><th class="n">Seasons</th></tr></thead><tbody>${
+    names.map(n=>`<tr><td>${who(n)}</td><td class="n">${all[n].titles}</td><td class="n">${all[n].lasts}</td><td class="n">${all[n].exact}</td><td class="n">${(all[n].total/all[n].seasons).toFixed(1)}</td><td class="n">${all[n].seasons}</td></tr>`).join('')
+  }</tbody></table></div>`;
+  per.forEach(({s,a})=>{
+    const players = Object.keys(s.picks);
+    h += `<section class="season-block"><h2>${esc(s.id)}</h2>
+    <div class="awards">
+      <div class="award champ"><span class="lbl">Champion</span><span class="who">${esc(a.champ)}</span><span class="what">${a.lb[0].total} points${s.championNote?'. '+esc(s.championNote):''}</span></div>
+      <div class="award"><span class="lbl">Last place</span><span class="who">${esc(a.last.join(' & '))}</span><span class="what">${a.lastScore} points</span></div>
+      <div class="award"><span class="lbl">Worst pick · ${a.wmax} spots</span><span class="who">${esc([...new Set(a.worst.map(w=>w.name))].join(', '))}</span><span class="what">${a.worst.map(w=>`${esc(w.name)}: ${esc(w.team)} picked ${ord(w.pick)}, finished ${ord(w.actual)}`).join('<br>')}</span></div>
+      <div class="award"><span class="lbl">Most exact hits</span><span class="who">${esc(a.exact.map(p=>p.name).join(' & '))}</span><span class="what">${a.emax} exact: ${a.exact.map(p=>p.rows.filter(r=>r.diff===0).map(r=>esc(r.team)).join(', ')).join(' / ')}</span></div>
+    </div>
+    <h3>${esc(s.id)} final leaderboard</h3>
+    <div class="tbl"><table><thead><tr><th>#</th><th>Player</th><th class="n">Score</th><th class="n">Exact</th></tr></thead><tbody>${
+      a.lb.map(p=>`<tr class="${p.rank===1?'lead':''}"><td class="rk">${p.rank}</td><td>${who(p.name)}</td><td class="n">${p.total}</td><td class="n">${p.exact}</td></tr>`).join('')
+    }</tbody></table></div>
+    <h3>Every pick vs. the ${esc(s.id)} final standings</h3>
+    <div class="tbl"><table><thead><tr><th>Fin.</th><th>Team</th>${players.map(n=>`<th class="n th-av">${avHead(n)}</th>`).join('')}</tr></thead><tbody>${
+      s.final.map((t,i)=>`<tr><td class="rk">${i+1}</td><td>${teamCell(t)}</td>${players.map(n=>{const pk=s.picks[n].indexOf(t)+1,d=Math.abs(pk-(i+1));return `<td class="n"><span class="chip ${d===0?'hit':d>=6?'miss-big':''}">${pk} <small>${d?'+'+d:'✓'}</small></span></td>`}).join('')}</tr>`).join('')
+    }</tbody></table></div>
+    <p class="note">Each cell shows where that player picked the team and the points it cost. Green is an exact hit; red is a miss of 6 or more spots.</p>
+    </section>`;
+  });
+  return h;
+}
+
+function render(){
+  if (!DATA) return;
+  const s = DATA.seasons.find(x=>x.id===seasonId) || DATA.seasons[0];
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===tab));
+  $('#season').closest('label').hidden = tab==='history';
+  const v = $('#view');
+  v.innerHTML = tab==='board'?renderBoard(s):tab==='standings'?renderStandings(s):tab==='proj'?renderProj(s):tab==='experts'?renderExperts(s):renderHistory();
+  v.style.animation='none'; void v.offsetWidth; v.style.animation='';
+}
+
+$('#tabs').addEventListener('click', e=>{const b=e.target.closest('button'); if(!b) return; tab=b.dataset.tab; try{localStorage.setItem('b1g-tab',tab)}catch(e){} render();});
+$('#season').addEventListener('change', e=>{seasonId=e.target.value; openPlayer=null; render();});
+$('#view').addEventListener('click', e=>{const r=e.target.closest('[data-player]'); if(!r) return; openPlayer = openPlayer===r.dataset.player?null:r.dataset.player; render();});
+$('#view').addEventListener('keydown', e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[data-player]')){e.preventDefault();e.target.click();}});
+
+fetch('data.json',{cache:'no-store'}).then(r=>{if(!r.ok) throw new Error(r.status); return r.json();}).then(d=>{
+  DATA = d; seasonId = d.current;
+  $('#season').innerHTML = d.seasons.map(s=>`<option value="${esc(s.id)}">${esc(s.id)}</option>`).join('');
+  $('#season').value = seasonId;
+  const cur = d.seasons.find(s=>s.id===d.current);
+  const when = new Date(d.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+  $('#status').textContent = `${cur.id} season · ${cur.status==='preseason'?'Preseason':cur.status==='final'?'Final':cur.gamesPlayed+' of '+cur.gamesTotal+' conference games played'} · Updated ${when}`;
+  render();
+}).catch(()=>{ $('#status').textContent='Standings data didn’t load.'; $('#view').innerHTML='<div class="empty"><strong>Couldn’t load the standings data.</strong> Reload the page to try again.</div>'; });
+</script>
