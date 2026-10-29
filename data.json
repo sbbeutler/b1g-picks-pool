@@ -2,9 +2,9 @@
  "current": "2026-27",
  "updatedAt": "2026-10-28T21:13:42+00:00",
  "avatars": {
-  "Sac": "avatars/sac.jpg",
-  "Richard": "avatars/richard2.jpg",
-  "Kevin": "avatars/kevin.jpg"
+  "Sac": "sac.jpg",
+  "Richard": "richard2.jpg",
+  "Kevin": "kevin.jpg"
  },
  "teams": {
   "Illinois": "#E84A27",

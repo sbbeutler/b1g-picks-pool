@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Big Ten Picks Pool</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,10 +91,12 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-size:14px}
 @media (prefers-reduced-motion:no-preference){.panel{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <header>
     <div class="brand">
-      <img class="crew" src="avatars/crew.jpg" alt="The three of us in the stands at a Purdue game" width="88" height="88">
+      <img class="crew" src="crew.jpg" alt="The three of us in the stands at a Purdue game" width="88" height="88">
       <div>
         <h1>Big Ten <span>Picks</span> Pool</h1>
         <p class="sub" id="status">Loading standings…</p>
@@ -311,3 +319,6 @@ fetch('data.json',{cache:'no-store'}).then(r=>{if(!r.ok) throw new Error(r.statu
   render();
 }).catch(()=>{ $('#status').textContent='Standings data didn’t load.'; $('#view').innerHTML='<div class="empty"><strong>Couldn’t load the standings data.</strong> Reload the page to try again.</div>'; });
 </script>
+
+</body>
+</html>
