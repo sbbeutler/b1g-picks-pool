@@ -1,6 +1,6 @@
 {
  "current": "2026-27",
- "updatedAt": "2026-10-29T14:05:02+00:00",
+ "updatedAt": "2026-10-30T11:58:34+00:00",
  "avatars": {
   "Sac": "sac.jpg",
   "Richard": "richard2.jpg",
@@ -143,7 +143,7 @@
    "gamesTotal": 180,
    "projections": {
     "source": "Bart Torvik T-Rank ratings, 5,000 simulations of the 180 remaining games",
-    "asOf": "2026-10-29",
+    "asOf": "2026-10-30",
     "teams": [
      {
       "team": "Illinois",
@@ -298,7 +298,7 @@
        0.001
       ],
       "trank": 20,
-      "barthag": 0.9107
+      "barthag": 0.9106
      },
      {
       "team": "Indiana",
@@ -360,7 +360,7 @@
        0.001
       ],
       "trank": 25,
-      "barthag": 0.8995
+      "barthag": 0.8994
      },
      {
       "team": "Purdue",
@@ -577,7 +577,7 @@
        0.143
       ],
       "trank": 76,
-      "barthag": 0.7652
+      "barthag": 0.7651
      },
      {
       "team": "Northwestern",
@@ -608,7 +608,7 @@
        0.158
       ],
       "trank": 74,
-      "barthag": 0.7674
+      "barthag": 0.7673
      },
      {
       "team": "Washington",
@@ -670,7 +670,7 @@
        0.166
       ],
       "trank": 80,
-      "barthag": 0.7582
+      "barthag": 0.7581
      },
      {
       "team": "Penn St",
