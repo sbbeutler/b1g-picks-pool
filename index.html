@@ -87,6 +87,19 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-size:14px}
 .av-ex{background:var(--soft);color:var(--muted);box-shadow:0 0 0 1px var(--line);border:1px dashed var(--muted)}
 .who-cell{display:inline-flex;align-items:center;gap:8px}
 .th-av-in{display:inline-flex;flex-direction:column;align-items:flex-end;gap:4px}
+.outlook{display:flex;flex-direction:column;gap:12px;padding-top:8px}
+tr.agree td{background:var(--soft)}
+.muted-cell{opacity:.75}
+.root-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.root-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.root-head{font-size:16px}
+.root-col{display:flex;flex-direction:column;gap:4px}
+.root-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.root-col li{display:flex;flex-direction:column;gap:1px}
+.lbl{font-family:var(--display);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.good-lbl{color:var(--good)} .bad-lbl{color:var(--bad)}
+.why{font-size:12px;color:var(--muted);margin:0}
+.why strong{color:var(--ink)}
 .foot{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:12px}
 @media (prefers-reduced-motion:no-preference){.panel{animation:in .18s ease-out}@keyframes in{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}}
 </style>
@@ -177,13 +190,13 @@ function seasonMeter(s){
     <div class="meter-track"><i style="width:${played/total*100}%"></i></div></div>`;
 }
 function renderBoard(s){
-  return seasonMeter(s) + renderBoardBody(s);
+  return seasonMeter(s) + renderBoardBody(s) + renderOutlook(s);
 }
 function renderBoardBody(s){
   const order = orderFor(s);
   const names = Object.keys(s.picks||{});
   if (!names.length) return `<div class="empty"><strong>Picks aren't in yet.</strong> Brad enters everyone's 1–18 list before tip-off. Until then, see the preseason outlook under Projections.</div>`;
-  if (!order.length) return `<div class="empty"><strong>Picks are locked.</strong> Scores start once the first Big Ten conference game is final.</div>`;
+  if (!order.length) return `<div class="empty"><strong>Picks are locked.</strong> Scores start once the first Big Ten conference game is final (Dec. 1). Until then, here's how the race sets up.</div>`;
   const lb = leaderboard(s, order);
   const projOrder = (s.projections?.teams||[]).map(t=>t.team);
   const proj = projOrder.length===18 ? Object.fromEntries(leaderboard(s, projOrder).map(p=>[p.name,p.total])) : {};
@@ -199,6 +212,47 @@ function renderBoardBody(s){
     }
   });
   h += `</tbody></table></div><p class="note">Tap a player to see each pick. ${s.status!=='final'?'Scores are against the current provisional standings. "Proj. final" scores the same picks against the projected final order.':''}</p>`;
+  return h;
+}
+
+function renderOutlook(s){
+  const fr = s.picks||{}, names = Object.keys(fr);
+  if (names.length < 2) return '';
+  const proj = (s.projections?.teams||[]).map(t=>t.team);
+  const projPos = {}; proj.forEach((t,i)=>projPos[t]=i+1);
+  const pos = n => { const m={}; fr[n].forEach((t,i)=>m[t]=i+1); return m; };
+  const P = Object.fromEntries(names.map(n=>[n,pos(n)]));
+  // 1) side-by-side picks
+  let h = `<section class="outlook"><h2>Season outlook</h2>
+  <p class="note">Everyone's picks side by side. Shaded rows are spots where all ${names.length} of us agree.</p>
+  <div class="tbl"><table><thead><tr><th>#</th>${names.map(n=>`<th>${who(n)}</th>`).join('')}${proj.length?'<th>Projected</th>':''}</tr></thead><tbody>${
+    Array.from({length:18},(_,i)=>{
+      const ts = names.map(n=>fr[n][i]); const same = ts.every(t=>t===ts[0]);
+      return `<tr class="${same?'agree':''}"><td class="rk">${i+1}</td>${ts.map(t=>`<td>${teamCell(t)}</td>`).join('')}${proj.length?`<td class="muted-cell">${teamCell(proj[i])}</td>`:''}</tr>`;
+    }).join('')
+  }</tbody></table></div>`;
+  // 2) rooting guide: compare each player's slot for a team with everyone else's average slot
+  h += `<h3>Who to root for</h3><p class="note">Your edge comes from teams you ranked differently than the others. Ranked a team higher than your rivals? Root for it to finish high. Ranked it lower? Root against it. Teams everyone slotted in the same spot can't change the race.</p><div class="root-grid">`;
+  for (const n of names){
+    const others = names.filter(o=>o!==n);
+    const rows = fr[n].map(t=>{
+      const mine = P[n][t], avg = others.reduce((a,o)=>a+P[o][t],0)/others.length;
+      return {t, mine, avg, gap: avg-mine};
+    });
+    const forT = rows.filter(r=>r.gap>0).sort((a,b)=>b.gap-a.gap).slice(0,3);
+    const agT = rows.filter(r=>r.gap<0).sort((a,b)=>a.gap-b.gap).slice(0,3);
+    const line = r => {
+      const oth = others.map(o=>`${esc(o)} ${ord(P[o][r.t])}`).join(', ');
+      const pj = projPos[r.t] ? ` · proj. ${ord(projPos[r.t])}` : '';
+      return `<li>${teamCell(r.t)} <span class="why">you ${ord(r.mine)} · ${oth}${pj}</span></li>`;
+    };
+    const big = [...rows].sort((a,b)=>Math.abs(b.gap)-Math.abs(a.gap))[0];
+    h += `<div class="root-card"><div class="root-head">${who(n)}</div>
+      <div class="root-col"><span class="lbl good-lbl">Root for</span><ul>${forT.map(line).join('')||'<li class="why">No team you ranked higher than everyone else.</li>'}</ul></div>
+      <div class="root-col"><span class="lbl bad-lbl">Root against</span><ul>${agT.map(line).join('')||'<li class="why">No team you ranked lower than everyone else.</li>'}</ul></div>
+      <p class="why">Biggest swing: <strong>${esc(big.t)}</strong>, ${Math.abs(big.gap).toFixed(1).replace('.0','')} spots ${big.gap>0?'higher':'lower'} than the others on average.</p></div>`;
+  }
+  h += `</div></section>`;
   return h;
 }
 
