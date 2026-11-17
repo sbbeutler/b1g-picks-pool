@@ -1,1 +1,110 @@
-{"Michigan St":{"adjoe":121.3,"adjde":93.8,"barthag":0.9507,"trank":5,"tempo":70.1161},"Illinois":{"adjoe":123.4,"adjde":97.1,"barthag":0.9404,"trank":9,"tempo":73.428},"Nebraska":{"adjoe":118.1,"adjde":94,"barthag":0.933,"trank":11,"tempo":70.812},"UCLA":{"adjoe":120.4,"adjde":96.6,"barthag":0.9259,"trank":14,"tempo":69.3221},"Michigan":{"adjoe":118.2,"adjde":95.5,"barthag":0.9204,"trank":18,"tempo":73.619},"USC":{"adjoe":116,"adjde":97,"barthag":0.8865,"trank":28,"tempo":71.957},"Indiana":{"adjoe":118.6,"adjde":99.2,"barthag":0.886,"trank":29,"tempo":69.818},"Purdue":{"adjoe":116.8,"adjde":97.8,"barthag":0.8847,"trank":32,"tempo":66.0353},"Ohio St":{"adjoe":118.4,"adjde":99.3,"barthag":0.8837,"trank":33,"tempo":69.5206},"Oregon":{"adjoe":118.9,"adjde":101.5,"barthag":0.861,"trank":42,"tempo":69.917},"Maryland":{"adjoe":118.1,"adjde":101.1,"barthag":0.8571,"trank":45,"tempo":70.5139},"Iowa":{"adjoe":115.4,"adjde":99.2,"barthag":0.8508,"trank":48,"tempo":65.7357},"Wisconsin":{"adjoe":113.6,"adjde":98.8,"barthag":0.834,"trank":56,"tempo":71.0105},"Minnesota":{"adjoe":111.4,"adjde":97.7,"barthag":0.8194,"trank":67,"tempo":66.7341},"Rutgers":{"adjoe":113.8,"adjde":102.4,"barthag":0.7717,"trank":78,"tempo":69.5208},"Washington":{"adjoe":113,"adjde":103.3,"barthag":0.7387,"trank":86,"tempo":69.6195},"Penn St":{"adjoe":113,"adjde":104.2,"barthag":0.7174,"trank":91,"tempo":72.154},"Northwestern":{"adjoe":109.2,"adjde":101.2,"barthag":0.7063,"trank":96,"tempo":66.6343}}
+{
+ "Michigan St": {
+  "adjoe": 121.29732852486651,
+  "adjde": 93.78477078202629,
+  "barthag": 0.950653675244269,
+  "trank": 5
+ },
+ "Illinois": {
+  "adjoe": 123.42103062375031,
+  "adjde": 97.0998072142572,
+  "barthag": 0.9403868157956549,
+  "trank": 9
+ },
+ "Nebraska": {
+  "adjoe": 118.16553698990293,
+  "adjde": 93.99172960163294,
+  "barthag": 0.9329001627918639,
+  "trank": 11
+ },
+ "UCLA": {
+  "adjoe": 120.37745685211266,
+  "adjde": 96.6454866215222,
+  "barthag": 0.925889789630844,
+  "trank": 14
+ },
+ "Michigan": {
+  "adjoe": 118.22735221762346,
+  "adjde": 95.57099730175403,
+  "barthag": 0.9203059314437583,
+  "trank": 18
+ },
+ "USC": {
+  "adjoe": 116.06733108092413,
+  "adjde": 97.07677202371035,
+  "barthag": 0.8864202406404605,
+  "trank": 28
+ },
+ "Indiana": {
+  "adjoe": 118.6172998231911,
+  "adjde": 99.24921500057278,
+  "barthag": 0.8859562906531112,
+  "trank": 29
+ },
+ "Purdue": {
+  "adjoe": 116.81397926325663,
+  "adjde": 97.85662364865473,
+  "barthag": 0.8845674815611124,
+  "trank": 32
+ },
+ "Ohio St": {
+  "adjoe": 118.45738571253207,
+  "adjde": 99.31108288716713,
+  "barthag": 0.8836445569940192,
+  "trank": 33
+ },
+ "Oregon": {
+  "adjoe": 118.94871433153433,
+  "adjde": 101.5086932258989,
+  "barthag": 0.8609618498449167,
+  "trank": 42
+ },
+ "Maryland": {
+  "adjoe": 118.13932092882399,
+  "adjde": 101.10163067769554,
+  "barthag": 0.8570487482095948,
+  "trank": 45
+ },
+ "Iowa": {
+  "adjoe": 115.45157580289296,
+  "adjde": 99.24137061800994,
+  "barthag": 0.8506751854340513,
+  "trank": 48
+ },
+ "Wisconsin": {
+  "adjoe": 113.66551797135581,
+  "adjde": 98.7842492685817,
+  "barthag": 0.8339247230689775,
+  "trank": 56
+ },
+ "Minnesota": {
+  "adjoe": 111.45699666782411,
+  "adjde": 97.72837319381756,
+  "barthag": 0.8193040451716787,
+  "trank": 67
+ },
+ "Rutgers": {
+  "adjoe": 113.83142800880711,
+  "adjde": 102.54829146875296,
+  "barthag": 0.7686004737678487,
+  "trank": 78
+ },
+ "Washington": {
+  "adjoe": 113.06024318538176,
+  "adjde": 103.2951810778147,
+  "barthag": 0.7386176044068657,
+  "trank": 86
+ },
+ "Penn St": {
+  "adjoe": 113.06942467837726,
+  "adjde": 104.27626758025221,
+  "barthag": 0.71728206066982,
+  "trank": 92
+ },
+ "Northwestern": {
+  "adjoe": 109.27518271645906,
+  "adjde": 101.25019577075417,
+  "barthag": 0.7062330970425549,
+  "trank": 97
+ }
+}
