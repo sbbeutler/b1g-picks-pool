@@ -1,6 +1,6 @@
 {
  "current": "2026-27",
- "updatedAt": "2026-11-25T09:24:53+00:00",
+ "updatedAt": "2026-11-26T03:07:00+00:00",
  "avatars": {
   "Sac": "sac.jpg",
   "Richard": "richard2.jpg",
@@ -183,7 +183,7 @@
    "gamesTotal": 180,
    "projections": {
     "source": "Bart Torvik T-Rank ratings, 5,000 simulations of the 180 remaining games",
-    "asOf": "2026-11-25",
+    "asOf": "2026-11-26",
     "teams": [
      {
       "team": "Illinois",
@@ -609,7 +609,7 @@
        0.074,
        0.099,
        0.101,
-       0.124,
+       0.125,
        0.115,
        0.101,
        0.073,
@@ -702,8 +702,8 @@
        0.011,
        0.028,
        0.038,
-       0.056,
-       0.085,
+       0.055,
+       0.086,
        0.13,
        0.173,
        0.224,
